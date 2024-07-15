@@ -1,5 +1,5 @@
 class Car{
-    constructor(x, y, width, height, controlType, maxSpeed = 3){
+    constructor(x, y, width, height, controlType, maxSpeed = 3, color = "blue"){
         this.x = x;
         this.y = y;
         this.width = width;
@@ -23,6 +23,27 @@ class Car{
             );
         }
         this.controls = new Controls(controlType);
+
+        this.image = new Image();
+        this.image.src = "car.png";
+
+        this.mask = document.createElement("canvas");
+        this.mask.width = width;
+        this.mask.height = height;
+
+        const maskCtx = this.mask.getContext("2d");
+        this.image.onload = () => {
+            maskCtx.fillStyle = color;
+            maskCtx.fillRect(0, 0, this.width, this.height);
+            maskCtx.fill();
+
+            // this will ensure that the color is only visible pixels of the car
+            // when the blue rectangle overlaps with the car.
+            maskCtx.globalCompositeOperation = "destination-atop";
+            maskCtx.drawImage(this.image, 0, 0, this.width, this.height);
+
+        }
+
 
     }
 
@@ -137,21 +158,32 @@ class Car{
     }
 
 
-    draw(ctx, color, drawSensor = false){
-        if (this.damaged){
-            ctx.fillStyle = "gray";
-        }else{
-            ctx.fillStyle = color;
-        }
-        ctx.beginPath();
-        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-
-        for (let i = 1; i < this.polygon.length; i++){
-            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-        }
-        ctx.fill();
+    draw(ctx, drawSensor = false){
         if (this.sensor && drawSensor){
             this.sensor.draw(ctx);
         }
+
+        
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(-this.angle);
+        if (!this.damaged){
+        ctx.drawImage(this.mask,
+            -this.width/2,
+            -this.height/2,
+            this.width,
+            this.height
+        );
+        ctx.globalCompositeOperation = "multiply";
+    }
+        ctx.drawImage(this.image,
+            -this.width/2,
+            -this.height/2,
+            this.width,
+            this.height
+        );
+        ctx.restore();
+
+
     }
 }
