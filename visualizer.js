@@ -9,7 +9,8 @@ class Visualizer{
         const height = ctx.canvas.height - margin * 2;
 
         const levelHeight = (height) /network.levels.length;
-        console.log(network.levels);
+
+        // console.log(network.levels);
         for(let i = network.levels.length - 1;i >= 0; i--){
             const levelTop = top+
             lerp(
@@ -17,8 +18,8 @@ class Visualizer{
                 0,
                 network.levels.length == 1 ? 0.5 : i / (network.levels.length - 1)
             );
-
-            Visualizer.drawLevel(ctx, network.levels[i], left, levelTop, width, levelHeight, i == network.levels.length -1? ['↑','←','→','↓']: []);
+            ctx.setLineDash([7, 3])
+            Visualizer.drawLevel(ctx, network.levels[i], left, levelTop, width, levelHeight, i == network.levels.length -1? ['W','A','D','S']: []);
         }
     }
 
@@ -75,6 +76,7 @@ class Visualizer{
             ctx.beginPath();
             ctx.arc(x, top, nodeRadius*0.6, 0, Math.PI * 2);
             ctx.fillStyle = getRGBA(outputs[i]);
+            const checkValue = Math.abs(outputs[i]);
             ctx.fill();
 
             ctx.beginPath();
@@ -88,12 +90,12 @@ class Visualizer{
                 ctx.beginPath();
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-                ctx.fillStyle = "black";
-                ctx.strokeStyle = "white";
-                ctx.font = (nodeRadius * 1.5) + "px sans-serif";
-                ctx.fillText(labels[i], x, top);
+                ctx.fillStyle = checkValue > 0.5 ? "black" : "white";
+                // ctx.strokeStyle = "white";
+                ctx.font = (nodeRadius * 0.8) + "px sans-serif";
+                ctx.fillText(labels[i], x, top+nodeRadius*0.1);
                 ctx.lineWidth = 0.5;
-                ctx.strokeText = (labels[i], x, top);
+                ctx.strokeText = (labels[i], x, top+nodeRadius*0.1);
 
             }
         }
