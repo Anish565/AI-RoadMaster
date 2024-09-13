@@ -1,4 +1,4 @@
-# Self Driving Car Simulation
+# AI RoadMaster
 This is a Self-Driving Car Simulation created using only JavaScript, HTML, and CSS. The project demonstrates how a neural network can be used to control a car driving on a road while avoiding obstacles (other cars). The neural network visualizes decision-making processes, including lane changing and maintaining a safe distance from other vehicles, all without external libraries or frameworks.
 
 ## Features
@@ -27,7 +27,7 @@ git clone <repository-link>
 
 2. Navigate to the project directory and open the `index.html` file in the web browser:
 ```
-cd self-driving-car
+cd AI RoadMaster
 open index.html
 
 ```
